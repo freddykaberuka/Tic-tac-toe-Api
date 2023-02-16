@@ -32,6 +32,22 @@ function isWinningBoard(board: Board, player: string): boolean {
         line.split('').every(i => board[Number(i)] === player)
     );
 }
+function checkWinner(board: Board): string | null {
+  const winningLines = [
+    '012', '345', '678', // rows
+    '036', '147', '258', // columns
+    '048', '246', // diagonals
+  ];
+  
+  for (const line of winningLines) {
+    const [a, b, c] = line.split('').map(Number);
+    if (board[a] !== '-' && board[a] === board[b] && board[b] === board[c]) {
+      return board[a];
+    }
+  }
+  
+  return null;
+}
 
 function average(board: Board, player: string, maxPlayer: boolean, depth: number = 0, maxDepth: number = 5): [number, number] {
     if (isWinningBoard(board, 'o')) {
@@ -101,6 +117,17 @@ app.get('/play', (req: Request, res: Response) => {
     const [_, move] = average(board, 'x', true);
     const newBoard = board.substr(0, move) + 'o' + board.substr(move + 1);
     res.send(newBoard);
+});
+app.get('/winner', (req: Request, res: Response) => {
+  const board = req.query.board as Board;
+  console.log(`board: ${board}`);
+  
+  if (!/^[x\-o]{9}$/.test(board)) {
+    return res.sendStatus(400);
+  }
+  
+  const winner = checkWinner(board);
+  res.json({ winner });
 });
 app.listen(port, () => {
     console.log(`server is listening at http://localhost:${port}`);

@@ -13,9 +13,16 @@ function getValidMoves(board) {
     console.log('valid moves:', moves);
     return moves;
 }
+function isTieBoard(board) {
+    return !board.includes('-');
+}
 function average(board, player, maxPlayer, depth, maxDepth) {
     if (depth === void 0) { depth = 0; }
     if (maxDepth === void 0) { maxDepth = 5; }
+    if (isTieBoard(board)) {
+        console.log('depth:', depth, 'score:', 0);
+        return [0, null];
+    }
     if (depth >= maxDepth) {
         console.log('depth:', depth, 'score:', 0);
         return [0, null];

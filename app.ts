@@ -12,52 +12,59 @@ const isMovePossible = (board: Board): boolean => {
 
 
 function getValidMoves(board: Board): number[] {
-  const moves = board.split('').reduce((moves, cell, i) =>
-    cell === '-' ? moves.concat(i) : moves
-  , []);
-  console.log('valid moves:', moves);
-  return moves;
+    const moves = board.split('').reduce((moves, cell, i) =>
+        cell === '-' ? moves.concat(i) : moves
+        , []);
+    console.log('valid moves:', moves);
+    return moves;
 }
 
+function isTieBoard(board: Board): boolean {
+    return !board.includes('-');
+}
 
 function average(board: Board, player: string, maxPlayer: boolean, depth: number = 0, maxDepth: number = 5): [number, number] {
-  if (depth >= maxDepth) {
-    console.log('depth:', depth, 'score:', 0);
-    return [0, null];
-  }
-  const nextPlayer = player === 'x' ? 'o' : 'x';
-  const validMoves = getValidMoves(board);
-  if (maxPlayer) {
-    let bestScore = Number.NEGATIVE_INFINITY;
-    let bestMove: number;
-    for (const move of validMoves) {
-      const [score, _] = average(
-        board.substr(0, move) + 'o' + board.substr(move + 1),
-        nextPlayer, false, depth + 1, maxDepth
-      );
-      console.log('depth:', depth, 'score:', score);
-      if (score > bestScore) {
-        bestScore = score;
-        bestMove = move;
-      }
+    if (isTieBoard(board)) {
+        console.log('depth:', depth, 'score:', 0);
+        return [0, null];
     }
-    return [bestScore, bestMove];
-  } else {
-    let bestScore = Number.POSITIVE_INFINITY;
-    let bestMove: number;
-    for (const move of validMoves) {
-      const [score, _] = average(
-        board.substr(0, move) + 'x' + board.substr(move + 1),
-        nextPlayer, true, depth + 1, maxDepth
-      );
-      console.log('depth:', depth, 'score:', score);
-      if (score < bestScore) {
-        bestScore = score;
-        bestMove = move;
-      }
+    if (depth >= maxDepth) {
+        console.log('depth:', depth, 'score:', 0);
+        return [0, null];
     }
-    return [bestScore, bestMove];
-  }
+    const nextPlayer = player === 'x' ? 'o' : 'x';
+    const validMoves = getValidMoves(board);
+    if (maxPlayer) {
+        let bestScore = Number.NEGATIVE_INFINITY;
+        let bestMove: number;
+        for (const move of validMoves) {
+            const [score, _] = average(
+                board.substr(0, move) + 'o' + board.substr(move + 1),
+                nextPlayer, false, depth + 1, maxDepth
+            );
+            console.log('depth:', depth, 'score:', score);
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = move;
+            }
+        }
+        return [bestScore, bestMove];
+    } else {
+        let bestScore = Number.POSITIVE_INFINITY;
+        let bestMove: number;
+        for (const move of validMoves) {
+            const [score, _] = average(
+                board.substr(0, move) + 'x' + board.substr(move + 1),
+                nextPlayer, true, depth + 1, maxDepth
+            );
+            console.log('depth:', depth, 'score:', score);
+            if (score < bestScore) {
+                bestScore = score;
+                bestMove = move;
+            }
+        }
+        return [bestScore, bestMove];
+    }
 }
 const app = express();
 const port = 3000;

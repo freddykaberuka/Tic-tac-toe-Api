@@ -6,7 +6,7 @@ export const isMovePossible = (board: Board): boolean => {
     return xCount === oCount || xCount === oCount + 1;
 }
 
-export function getValidMoves(board: Board): number[] {
+export const getValidMoves = (board: Board): number[] => {
     const moves = board.split('').reduce((moves, cell, i) =>
         cell === '-' ? moves.concat(i) : moves
         , []);
@@ -14,7 +14,7 @@ export function getValidMoves(board: Board): number[] {
     return moves;
 }
 
-export function isTieBoard(board: Board): boolean {
+export const isTieBoard = (board: Board): boolean => {
     return !board.includes('-');
 }
 export function isWinningBoard(board: Board, player: string): boolean {
@@ -28,7 +28,7 @@ export function isWinningBoard(board: Board, player: string): boolean {
     );
 }
 
-export function checkWinner(board: Board): string | null {
+export const checkWinner = (board: Board): string | null => {
     const winningLines = [
         '012', '345', '678', // rows
         '036', '147', '258', // columns

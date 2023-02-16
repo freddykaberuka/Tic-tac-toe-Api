@@ -2,13 +2,13 @@ import { isWinningBoard, isTieBoard, getValidMoves } from './boardUtils';
 
 type Board = string;
 
-export function average(
+export const average = (
   board: Board,
   player: string,
   maxPlayer: boolean,
   depth: number = 0,
   maxDepth: number = 5
-): [number, number] {
+): [number, number] => {
   if (isWinningBoard(board, "o")) {
     console.log("depth:", depth, "score:", Number.NEGATIVE_INFINITY);
     return [Number.NEGATIVE_INFINITY, null];

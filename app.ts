@@ -1,7 +1,7 @@
 const express = require('express')
 import type { Request, Response } from 'express';
-import {average} from './helpers/gameUtils';
-import { isMovePossible, checkWinner} from './helpers/gameController'
+import { average } from './helpers/gameUtils';
+import { isMovePossible, checkWinner } from './helpers/gameController'
 
 type Board = string;
 
@@ -25,17 +25,17 @@ app.get('/play', (req: Request, res: Response) => {
     res.send(newBoard);
 });
 app.get('/winner', (req: Request, res: Response) => {
-  const board = req.query.board as Board;
-  console.log(`board: ${board}`);
-  
-  if (!/^[x\-o]{9}$/.test(board)) {
-    return res.sendStatus(400);
-  }
-  
-  const winner = checkWinner(board);
-  res.json({ winner });
-  console.log(winner);
-  
+    const board = req.query.board as Board;
+    console.log(`board: ${board}`);
+
+    if (!/^[x\-o]{9}$/.test(board)) {
+        return res.sendStatus(400);
+    }
+
+    const winner = checkWinner(board);
+    res.json({ winner });
+    console.log(winner);
+
 });
 app.listen(port, () => {
     console.log(`server is listening at http://localhost:${port}`);

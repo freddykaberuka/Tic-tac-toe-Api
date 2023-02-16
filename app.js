@@ -26,6 +26,21 @@ function isWinningBoard(board, player) {
         return line.split('').every(function (i) { return board[Number(i)] === player; });
     });
 }
+function checkWinner(board) {
+    var winningLines = [
+        '012', '345', '678',
+        '036', '147', '258',
+        '048', '246', // diagonals
+    ];
+    for (var _i = 0, winningLines_1 = winningLines; _i < winningLines_1.length; _i++) {
+        var line = winningLines_1[_i];
+        var _a = line.split('').map(Number), a = _a[0], b = _a[1], c = _a[2];
+        if (board[a] !== '-' && board[a] === board[b] && board[b] === board[c]) {
+            return board[a];
+        }
+    }
+    return null;
+}
 function average(board, player, maxPlayer, depth, maxDepth) {
     if (depth === void 0) { depth = 0; }
     if (maxDepth === void 0) { maxDepth = 5; }
@@ -90,6 +105,16 @@ app.get('/play', function (req, res) {
     var _a = average(board, 'x', true), _ = _a[0], move = _a[1];
     var newBoard = board.substr(0, move) + 'o' + board.substr(move + 1);
     res.send(newBoard);
+});
+app.get('/winner', function (req, res) {
+    var board = req.query.board;
+    console.log("board: ".concat(board));
+    if (!/^[x\-o]{9}$/.test(board)) {
+        return res.sendStatus(400);
+    }
+    var winner = checkWinner(board);
+    res.json({ winner: winner });
+    console.log(winner);
 });
 app.listen(port, function () {
     console.log("server is listening at http://localhost:".concat(port));

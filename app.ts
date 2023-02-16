@@ -128,6 +128,8 @@ app.get('/winner', (req: Request, res: Response) => {
   
   const winner = checkWinner(board);
   res.json({ winner });
+  console.log(winner);
+  
 });
 app.listen(port, () => {
     console.log(`server is listening at http://localhost:${port}`);

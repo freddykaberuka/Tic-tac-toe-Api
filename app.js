@@ -16,9 +16,27 @@ function getValidMoves(board) {
 function isTieBoard(board) {
     return !board.includes('-');
 }
+function isWinningBoard(board, player) {
+    var winningLines = [
+        '012', '345', '678',
+        '036', '147', '258',
+        '048', '246', // diagonals
+    ];
+    return winningLines.some(function (line) {
+        return line.split('').every(function (i) { return board[Number(i)] === player; });
+    });
+}
 function average(board, player, maxPlayer, depth, maxDepth) {
     if (depth === void 0) { depth = 0; }
     if (maxDepth === void 0) { maxDepth = 5; }
+    if (isWinningBoard(board, 'o')) {
+        console.log('depth:', depth, 'score:', Number.NEGATIVE_INFINITY);
+        return [Number.NEGATIVE_INFINITY, null];
+    }
+    if (isWinningBoard(board, 'x')) {
+        console.log('depth:', depth, 'score:', Number.POSITIVE_INFINITY);
+        return [Number.POSITIVE_INFINITY, null];
+    }
     if (isTieBoard(board)) {
         console.log('depth:', depth, 'score:', 0);
         return [0, null];

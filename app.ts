@@ -22,8 +22,26 @@ function getValidMoves(board: Board): number[] {
 function isTieBoard(board: Board): boolean {
     return !board.includes('-');
 }
+function isWinningBoard(board: Board, player: string): boolean {
+    const winningLines = [
+        '012', '345', '678', // rows
+        '036', '147', '258', // columns
+        '048', '246', // diagonals
+    ];
+    return winningLines.some(line =>
+        line.split('').every(i => board[Number(i)] === player)
+    );
+}
 
 function average(board: Board, player: string, maxPlayer: boolean, depth: number = 0, maxDepth: number = 5): [number, number] {
+    if (isWinningBoard(board, 'o')) {
+        console.log('depth:', depth, 'score:', Number.NEGATIVE_INFINITY);
+        return [Number.NEGATIVE_INFINITY, null];
+    }
+    if (isWinningBoard(board, 'x')) {
+        console.log('depth:', depth, 'score:', Number.POSITIVE_INFINITY);
+        return [Number.POSITIVE_INFINITY, null];
+    }
     if (isTieBoard(board)) {
         console.log('depth:', depth, 'score:', 0);
         return [0, null];
